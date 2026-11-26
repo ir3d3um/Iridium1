@@ -3,7 +3,9 @@
 A free website for GitHub Pages. Nothing here needs a paid licence.
 
 ## What is in the folder
-- index.html: the public site
+- index.html: the shop (artworks first)
+- about.html, commission.html, contact.html, policies.html, thanks.html: the other pages
+- style.css, common.js, forms.js, site-config.js: shared design, header, forms and settings
 - admin.html: your private admin page (add, edit, reorder, delete artworks)
 - accounts.js, firebase-config.js, site.json: visitor accounts, their settings, and the sale banner
 - policies.html: shipping, returns, customs, copyright and privacy for buyers worldwide
@@ -34,12 +36,12 @@ Open /admin.html on your site and sign in with your GitHub username, repository 
 3. In GoatCounter, Settings > Site > allow adding events from the page is on by default.
 You will see visitors, pages and countries, plus events named opened, enquire and wallview for each artwork. That tells you which pieces get attention. Time spent on a piece is not measured; opens and enquiries are the best signal.
 
-## 5. Enquiry form (free, Formspree)
-1. Sign up at formspree.io (free plan), create a new form, and copy its address, which looks like https://formspree.io/f/abcd1234.
-2. Open site.js and replace https://formspree.io/f/YOUR-FORM-ID at the top with your address. Commit.
-The same form appears in the Get in touch section and in the pop-up on each drawing. Your Gmail address is never shown on the site. Messages go to Formspree, which forwards them to the Gmail address you sign up with. Until you connect Formspree, the form shows a message asking visitors to use Instagram instead.
-Visitors choose: ask a question, buy, or ask about something similar. Country and phone or address only appear if they choose to buy.
-Sold pieces show a Sold label, and the button changes to Ask about something similar.
+## 5. Contact and commission forms (free, FormSubmit)
+Messages from contact.html and commission.html go to your Gmail through FormSubmit, which is free and allows one photo attachment (under 5 MB).
+1. The address is set in site-config.js.
+2. The first message anyone sends triggers an activation email from FormSubmit to your Gmail. Click "Activate Form" in it. Only after that do messages arrive.
+3. FormSubmit then gives you a random code. Put it in site-config.js in place of your email (https://formsubmit.co/YOUR-CODE), so your address is no longer in the site files.
+Visitors see a thank-you page (thanks.html) after sending.
 
 ## 6. Protection, honestly
 - Right-click, drag and long-press saving are blocked on artwork, and printing is disabled.

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Commission an artwork | ir3d3um</title>
+<meta name="description" content="Commission an original artwork from ir3d3um, made by hand on handmade paper.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='21' fill='none' stroke='%23a3322b' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Karla:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="index.html" aria-label="ir3d3um home"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21.5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" stroke-width="1"/><text x="24" y="29" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="15" font-weight="600" fill="currentColor">ir3</text></svg><span>ir3d3um</span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mainnav">Menu</button>
+  <nav class="mainnav" id="mainnav" aria-label="Main"><a href="index.html">Shop</a><a href="commission.html">Commission</a><a href="about.html">About</a><a href="contact.html">Contact</a><span id="acctslot" style="display:contents"></span></nav>
+</div></header>
+<main class="wrap page">
+  <h1>Commission an artwork</h1>
+  <p class="lede">Have a person, a place or a moment you want kept? I make commissions by hand on handmade paper.</p>
+  <div class="two">
+    <div>
+      <ol class="steps">
+        <li><strong>Send a reference.</strong> Attach a photo and tell me what it means to you.</li>
+        <li><strong>Agree the details.</strong> Size and price are agreed by email before I begin. A deposit is paid first.</li>
+        <li><strong>I make it.</strong> A medium piece takes about a day, a detailed one around three. Delivery usually takes 10 to 15 days.</li>
+      </ol>
+      <p class="hint" style="color:var(--ink-soft);font-size:.9rem">Commissions follow the <a href="policies.html#commissions">commission policy</a>.</p>
+    </div>
+    <div class="panel">
+      <form class="irform" data-enquiry>
+        <input type="hidden" name="intent" value="Commission an artwork">
+        <div class="row2"><label>Your name<input name="name" required autocomplete="name"></label>
+      <label>Your email<input name="email" type="email" required autocomplete="email"></label></div>
+        <label>What would you like me to make?<input name="artwork" placeholder="For example: a portrait of my grandmother" required></label>
+        <div class="row2"><label>Preferred size<select name="size"><option>Not sure yet</option><option>Small (about A5)</option><option>Medium (about A4)</option><option>Large (about A3)</option></select></label>
+        <label>Your country<input name="country" autocomplete="country-name"></label></div>
+        <label>Reference photo<input type="file" name="attachment" accept="image/*"></label>
+        <p class="hint">One photo, under 5 MB.</p>
+        <label>Message<textarea name="message" rows="4" required placeholder="Tell me about the person, place or moment, and any deadline."></textarea></label>
+        <button class="btn" type="submit">Send commission request</button>
+        <p class="formstatus" role="status"></p>
+      </form>
+    </div>
+  </div>
+</main>
+<footer class="site-foot"><div class="wrap">
+  <nav aria-label="Footer"><a href="index.html">Shop</a><a href="commission.html">Commission</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="policies.html">Shipping, returns and policies</a><a href="https://www.instagram.com/ir3d3um" target="_blank" rel="noopener">Instagram</a></nav>
+  <span>© 2026 ir3d3um. All artwork is copyrighted and may not be reproduced without permission.</span>
+</div></footer>
+<script src="site-config.js"></script>
+<script src="common.js"></script>
+<script src="firebase-config.js"></script>
+<script src="accounts.js"></script>
+<script src="forms.js"></script>
+</body>
+</html>

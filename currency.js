@@ -12,11 +12,10 @@ function fmt(n,c){try{return new Intl.NumberFormat("en",{style:"currency",curren
 function conv(a){var v=inr(a.price);if(v==null||!rates||cur==="INR"||!rates[cur])return"";return"about "+fmt(v*rates[cur],cur)}
 function apply(){document.querySelectorAll("[data-price]").forEach(function(s){s.textContent=s._c()})}
 function init(){
-var nav=document.querySelector("nav");if(nav){var sel=document.createElement("select");sel.setAttribute("aria-label","Show approximate prices in");
-sel.style.cssText="font:inherit;font-size:.9rem;padding:.3rem;border:1px solid var(--line);background:transparent;color:inherit;border-radius:2px";
+var slot=document.getElementById("curslot");if(slot){var lab=document.createElement("label");lab.className="cur";lab.appendChild(document.createTextNode("Prices in"));var sel=document.createElement("select");sel.setAttribute("aria-label","Show approximate prices in");
 LIST.forEach(function(c){var o=document.createElement("option");o.value=c;o.textContent=c;if(c===cur)o.selected=true;sel.appendChild(o)});
-sel.onchange=function(){cur=sel.value;try{localStorage.setItem(KEY,cur)}catch(e){}apply()};nav.insertBefore(sel,nav.querySelector(".nav-cta"))}
+sel.onchange=function(){cur=sel.value;try{localStorage.setItem(KEY,cur)}catch(e){}apply()};lab.appendChild(sel);slot.appendChild(lab)}
 load().then(function(r){rates=r;apply()}).catch(function(){})}
-document.addEventListener("ir-price",function(e){var s=e.detail.s,a=e.detail.a;s.setAttribute("data-price","1");s._c=function(){var c=conv(a);return a.price?(c?a.price+" ("+c+")":a.price):"Price on request"};s.textContent=s._c()});
+document.addEventListener("ir-price",function(e){var s=e.detail.s,a=e.detail.a;s.setAttribute("data-price","1");s._c=function(){var c=conv(a);return a.price?(c?a.price+"  \u00b7  "+c:a.price):"Price on request"};s.textContent=s._c()});
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();

@@ -51,62 +51,44 @@ addEnq:function(id,r){return load().then(function(f){r.at=f.F.serverTimestamp();
 listEnq:function(id){return load().then(function(f){return f.F.getDocs(f.F.query(f.F.collection(f.db,"users",id,"enquiries"),f.F.orderBy("at","desc"))).then(function(s){return s.docs.map(function(d){var x=d.data();x.at=x.at&&x.at.toDate?x.at.toDate().toISOString():"";return x})})})}}}
 
 /* ---- interface ---- */
-var css=document.createElement("style");css.textContent=`
-#authd,#acctd{background:var(--paper);color:var(--ink);padding:1.3rem;max-width:30rem;width:92vw;border-radius:4px;overflow:auto;max-height:92vh}
-#authd h3,#acctd h3{font:500 1.6rem Georgia,serif;margin:0 0 .6rem}#acctd h4{font:500 1.15rem Georgia,serif;margin:1.3rem 0 .5rem}
-#authd label,#acctd label.chk{display:block;font-size:.9rem;color:var(--ink-soft);margin:.7rem 0 0}
-#authd input:not([type=checkbox]){display:block;width:100%;font:inherit;font-size:1rem;padding:.6rem;margin-top:.2rem;border:1px solid var(--line);border-radius:3px;background:var(--paper-2);color:var(--ink)}
-.chk input{margin-right:.5rem}
-#authd .hint,#acctd .hint,#astatus{font-size:.85rem;color:var(--ink-soft);margin:.6rem 0 0}
-.favgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.6rem}
-.favitem{background:var(--paper-2);border:0;padding:.4rem;cursor:pointer;color:var(--ink);font:inherit;font-size:.8rem;text-align:left}.favitem img{width:100%;height:90px;object-fit:cover;display:block;margin-bottom:.3rem}
-#aenq{list-style:none;padding:0;margin:0}#aenq li{padding:.5rem 0;border-bottom:1px solid var(--line)}#aenq span{display:block;font-size:.85rem;color:var(--ink-soft)}
-.card{position:relative}
-.verbox{background:var(--paper-2);padding:.9rem;border-radius:3px;margin:.4rem 0 .2rem}
-.verbox strong{display:block;font:500 1.05rem Georgia,serif}.verbox code{display:inline-block;background:var(--ink);color:var(--paper);padding:.25rem .6rem;border-radius:2px;font-size:1.05rem;letter-spacing:.08em;margin:.4rem 0}
-.verbox .btn{margin:.4rem .4rem 0 0}
-#pform label{display:block;font-size:.85rem;color:var(--ink-soft);margin:.6rem 0 0}#pform input{display:block;width:100%;font:inherit;font-size:1rem;padding:.55rem;margin-top:.2rem;border:1px solid var(--line);border-radius:3px;background:var(--paper-2);color:var(--ink)}
-.heart{position:absolute;top:.9rem;right:.9rem;width:2.4rem;height:2.4rem;border-radius:50%;border:0;background:#0009;color:#fff;font-size:1.3rem;line-height:1;cursor:pointer;z-index:2}
-.heart[aria-pressed=true]{background:var(--seal)}
-.banner{background:var(--seal);color:#fff;text-align:center;padding:.6rem 2.4rem;font:500 .95rem var(--sans);position:relative}
-.banner button{position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:0;color:#fff;font-size:1.3rem;cursor:pointer}
-@media(max-width:520px){nav a[href="#work"],nav a[href="#commission"]{display:none}}`;
-document.head.appendChild(css);
 var wrap=document.createElement("div");wrap.innerHTML=`
-<dialog id="authd" aria-label="Sign in"><h3 id="ahead">Sign in</h3><p class="hint" id="anote"></p>
-<p class="hint" id="ademo" hidden>Demo mode: accounts are kept on this device only until the site is connected to Firebase.</p>
-<form id="aform"><label>Email<input name="email" type="email" required autocomplete="email"></label>
-<label>Password<input name="pw" type="password" required minlength="6" autocomplete="current-password"></label>
-<p class="hint" id="asignupnote" hidden>Create an account and verify your email to get 5% off your first order.</p>
-<label class="chk" id="alertrow" hidden><input type="checkbox" name="alerts"> Tell me about sales and events</label>
-<div class="fbtns"><button class="btn" id="asubmit">Sign in</button><button type="button" class="btn ghost" id="aswitch">Create an account</button></div>
-<p><a href="#" id="aforgot">Forgot your password?</a></p>
-<button type="button" class="btn ghost" id="agoogle">Continue with Google</button>
-<p class="hint">I keep your email, saved drawings and enquiries only to run your account, and I never share them.</p>
-<p id="astatus" role="status"></p><button type="button" class="btn ghost" id="aclose2">Close</button></form></dialog>
-<dialog id="acctd" aria-label="Your account"><h3>Your account</h3><p class="hint" id="aemail"></p>
+<dialog id="authd" aria-label="Sign in or create an account"><div class="sheet">
+<div class="tabs" role="tablist"><button type="button" role="tab" id="tabup">Create account</button><button type="button" role="tab" id="tabin">Sign in</button></div>
+<h3 id="ahead">Create an account</h3><p class="hint" id="anote"></p>
+<p class="hint" id="ademo" hidden>Preview mode: accounts are kept on this device only until the site is connected to Firebase.</p>
+<form id="aform" class="irform"><label>Email<input name="email" type="email" required autocomplete="email"></label>
+<label>Password<input name="pw" type="password" required minlength="6" autocomplete="new-password"></label>
+<p class="hint" id="asignupnote">Verify your email after signing up to get 5% off your first order.</p>
+<label class="chk" id="alertrow"><input type="checkbox" name="alerts"> Tell me about sales and events</label>
+<button class="btn block" id="asubmit">Create account</button>
+<p class="hint" id="astatus" role="status"></p>
+<button type="button" class="textlink" id="aforgot" hidden>Forgot your password?</button>
+<button type="button" class="btn ghost block" id="agoogle">Continue with Google</button>
+<p class="hint">I keep your email, saved artworks and enquiries only to run your account, and I never share them.</p>
+<button type="button" class="btn ghost block" id="aclose2">Close</button></form></div></dialog>
+<dialog id="acctd" aria-label="Your account"><div class="sheet"><h3>Your account</h3><p class="hint" id="aemail"></p>
 <div id="aver" class="verbox"></div>
 <h4>Your details</h4>
-<form id="pform"><label>Name<input name="pname" autocomplete="name"></label><label>Phone (optional)<input name="pphone" type="tel" autocomplete="tel"></label><label>Country<input name="pcountry" autocomplete="country-name"></label>
-<div class="fbtns"><button class="btn" type="submit">Save details</button></div><p class="hint" id="pstatus" role="status"></p></form>
-<label class="chk"><input type="checkbox" id="aalerts"> Tell me about sales and events</label>
-<h4>Saved drawings</h4><div class="favgrid" id="afavs"></div>
-<h4>Your enquiries</h4><ul id="aenq"></ul>
-<div class="fbtns"><button type="button" class="btn ghost" id="asignout">Sign out</button><button type="button" class="btn" id="aclose">Close</button></div></dialog>`;
+<form id="pform" class="irform"><label>Name<input name="pname" autocomplete="name"></label><label>Phone (optional)<input name="pphone" type="tel" autocomplete="tel"></label><label>Country<input name="pcountry" autocomplete="country-name"></label>
+<button class="btn" type="submit">Save details</button><p class="hint" id="pstatus" role="status"></p></form>
+<label class="chk" style="margin-top:1rem"><input type="checkbox" id="aalerts"> Tell me about sales and events</label>
+<h4>Saved artworks</h4><div class="favgrid" id="afavs"></div>
+<h4>Your enquiries</h4><ul id="aenq" class="enqlist"></ul>
+<div class="acts" style="justify-content:flex-start;margin-top:1.2rem"><button type="button" class="btn ghost" id="asignout">Sign out</button><button type="button" class="btn" id="aclose">Close</button></div></div></dialog>`;
 while(wrap.firstChild)document.body.appendChild(wrap.firstChild);
-var authd=$("authd"),acctd=$("acctd"),nav=document.querySelector("nav"),btn=el("a","acct","Sign in");btn.href="#";
-nav.insertBefore(btn,nav.querySelector(".nav-cta"));
+var authd=$("authd"),acctd=$("acctd"),btn=el("a","acct","Sign in");btn.href="#";var slot=$("acctslot")||document.querySelector(".mainnav");if(slot)slot.appendChild(btn);
 $("ademo").hidden=!DEMO;$("agoogle").hidden=DEMO;
 function nice(x){var c=x&&x.code||"";if(c==="auth/email-already-in-use")return"An account with this email already exists. Try signing in.";
 if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return"That email or password is not right.";
 if(c==="auth/weak-password")return"Choose a password of at least 6 characters.";if(c==="auth/popup-closed-by-user")return"";
 return(x&&x.message)||"Something went wrong. Please try again."}
-function openAuth(note,m){mode=m;$("anote").textContent=note||"";$("astatus").textContent="";
-$("ahead").textContent=m==="up"?"Create an account":"Sign in";$("asignupnote").hidden=m!=="up";$("asubmit").textContent=m==="up"?"Create account":"Sign in";
-$("aswitch").textContent=m==="up"?"I already have an account":"Create an account";$("alertrow").hidden=m!=="up";
-$("aform").pw.autocomplete=m==="up"?"new-password":"current-password";if(!authd.open)authd.showModal()}
-btn.onclick=function(e){e.preventDefault();user?openAcct():openAuth("","in")};
-$("aswitch").onclick=function(){openAuth($("anote").textContent,mode==="up"?"in":"up")};
+function openAuth(note,m){mode=m;$("anote").textContent=note||"";$("astatus").textContent="";var up=m==="up";
+$("ahead").textContent=up?"Create an account":"Sign in";$("asubmit").textContent=up?"Create account":"Sign in";
+$("asignupnote").hidden=!up;$("alertrow").hidden=!up;$("aforgot").hidden=up;$("aform").pw.autocomplete=up?"new-password":"current-password";
+$("tabup").setAttribute("aria-selected",up?"true":"false");$("tabin").setAttribute("aria-selected",up?"false":"true");
+if(!authd.open)authd.showModal()}
+btn.onclick=function(e){e.preventDefault();user?openAcct():openAuth("","up")};
+$("tabup").onclick=function(){openAuth($("anote").textContent,"up")};$("tabin").onclick=function(){openAuth($("anote").textContent,"in")};
 $("aclose").onclick=function(){acctd.close()};$("aclose2").onclick=function(){authd.close()};
 [authd,acctd].forEach(function(d){d.addEventListener("click",function(e){if(e.target===d)d.close()})});
 $("aform").onsubmit=function(e){e.preventDefault();var f=e.target,em=f.email.value.trim(),pw=f.pw.value;$("astatus").textContent="One moment\u2026";
@@ -117,19 +99,19 @@ B.reset(em).then(function(){$("astatus").textContent="If that email has an accou
 $("asignout").onclick=function(){B.out().then(function(){acctd.close()})};
 $("aalerts").onchange=function(){prof.alerts=this.checked;if(user)B.alerts(user.uid,this.checked)};
 
-function refresh(){Object.keys(hearts).forEach(function(id){var on=prof.favs.indexOf(id)>-1,h=hearts[id];h.textContent=on?"\u2665":"\u2661";h.setAttribute("aria-pressed",on?"true":"false");h.title=on?"Saved. Tap to remove":"Save to favourites"})}
+function refresh(){Object.keys(hearts).forEach(function(id){var on=prof.favs.indexOf(id)>-1,h=hearts[id];h.setAttribute("aria-pressed",on?"true":"false");h.title=on?"Saved. Tap to remove":"Save to favourites"})}
 document.addEventListener("ir-card",function(e){var a=e.detail.a,c=e.detail.c,id=a.file;arts[id]=a;cardEls[id]=c;
-var h=el("button","heart","\u2661");h.type="button";h.setAttribute("aria-label","Save "+(a.title||"this drawing")+" to favourites");
-h.onclick=function(ev){ev.stopPropagation();if(!user){openAuth("Sign in or create an account to save drawings.","in");return}
+var h=el("button","heart");h.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';h.type="button";h.setAttribute("aria-label","Save "+(a.title||"this artwork")+" to favourites");
+h.onclick=function(ev){ev.stopPropagation();if(!user){openAuth("Create an account or sign in to save artworks.","up");return}
 var on=prof.favs.indexOf(id)<0;prof.favs=prof.favs.filter(function(x){return x!==id});if(on)prof.favs.push(id);refresh();B.fav(user.uid,id,on)};
-c.appendChild(h);hearts[id]=h;refresh()});
+(e.detail.m||c).appendChild(h);hearts[id]=h;refresh()});
 document.addEventListener("ir-enquiry",function(e){if(user)B.addEnq(user.uid,{piece:e.detail.piece||"",intent:e.detail.intent||"",message:(e.detail.message||"").slice(0,500),at:new Date().toISOString()})});
-function tagCode(){document.querySelectorAll("#eform,#cform").forEach(function(f){var i=f.querySelector("[name=welcome_code]");if(!i){i=document.createElement("input");i.type="hidden";i.name="welcome_code";f.appendChild(i)}
+function tagCode(){document.querySelectorAll(".irform[data-enquiry]").forEach(function(f){var i=f.querySelector("[name=welcome_code]");if(!i){i=document.createElement("input");i.type="hidden";i.name="welcome_code";f.appendChild(i)}
 i.value=(user&&user.verified&&!prof.codeUsed)?mkcode(user.uid):"";
 var j=f.querySelector("[name=account_email]");if(!j){j=document.createElement("input");j.type="hidden";j.name="account_email";f.appendChild(j)}j.value=user?user.email:"";
 var k=f.querySelector("[name=email_verified]");if(!k){k=document.createElement("input");k.type="hidden";k.name="email_verified";f.appendChild(k)}k.value=user?(user.verified?"yes":"no"):"not signed in"})}
-function prefill(u){document.querySelectorAll("#eform [name=email],#cform [name=email]").forEach(function(i){if(!i.value)i.value=u.email});
-if(u.name)document.querySelectorAll("#eform [name=name],#cform [name=name]").forEach(function(i){if(!i.value)i.value=u.name})}
+function prefill(u){document.querySelectorAll(".irform[data-enquiry] [name=email]").forEach(function(i){if(!i.value)i.value=u.email});
+if(u.name)document.querySelectorAll(".irform[data-enquiry] [name=name]").forEach(function(i){if(!i.value)i.value=u.name})}
 function verBox(){var b=$("aver");b.innerHTML="";
 if(user.verified){b.appendChild(el("strong","","Email verified. Thank you."));
 if(prof.codeUsed){b.appendChild(el("p","hint","Your welcome discount has been used on an order. Thank you for buying."));return}
@@ -147,8 +129,8 @@ $("pform").onsubmit=function(e){e.preventDefault();var f=e.target,p={name:f.pnam
 prof.profile=p;$("pstatus").textContent="Saving\u2026";B.saveProfile(user.uid,p).then(function(){$("pstatus").textContent="Saved."}).catch(function(){$("pstatus").textContent="Could not save. Please try again."})};
 function openAcct(){$("aemail").textContent=user.email;$("aalerts").checked=!!prof.alerts;verBox();fillProfile();var g=$("afavs"),any=0;g.innerHTML="";
 prof.favs.forEach(function(id){var a=arts[id];if(!a)return;any=1;var t=el("button","favitem");t.type="button";var i=new Image();i.src=a.thumb||a.file;i.alt="";i.draggable=false;t.appendChild(i);t.appendChild(el("span","",a.title||"Untitled"));
-t.onclick=function(){acctd.close();var c=cardEls[id];if(c)c.scrollIntoView({behavior:"smooth",block:"center"})};g.appendChild(t)});
-if(!any)g.appendChild(el("p","hint","No saved drawings yet. Tap the heart on a drawing to save it."));
+t.onclick=function(){acctd.close();var c=cardEls[id];if(!c){location.href="index.html#shop";return}if(c)c.scrollIntoView({behavior:"smooth",block:"center"})};g.appendChild(t)});
+if(!any)g.appendChild(el("p","hint","No saved artworks yet. Tap the heart on an artwork to save it."));
 var L=$("aenq");L.innerHTML="";L.appendChild(el("li","hint","Loading\u2026"));
 B.listEnq(user.uid).then(function(l){L.innerHTML="";if(!l.length){L.appendChild(el("li","hint","No enquiries yet."));return}
 l.forEach(function(r){var li=el("li");li.appendChild(el("strong","",(r.piece||"General enquiry")+" \u00b7 "+(r.intent||"")));li.appendChild(el("span","",(r.at?new Date(r.at).toLocaleDateString():"")+" \u00b7 Sent. I reply by email."));L.appendChild(li)})}).catch(function(){L.innerHTML="";L.appendChild(el("li","hint","Could not load your enquiries."))});

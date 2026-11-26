@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ir3d3um | Original art on handmade paper</title>
+<meta name="description" content="Original artworks by ir3d3um, made by hand in India on handmade paper. Shop originals or commission an artwork.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='21' fill='none' stroke='%23a3322b' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Karla:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="index.html" aria-label="ir3d3um home"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21.5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" stroke-width="1"/><text x="24" y="29" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="15" font-weight="600" fill="currentColor">ir3</text></svg><span>ir3d3um</span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mainnav">Menu</button>
+  <nav class="mainnav" id="mainnav" aria-label="Main"><a href="index.html">Shop</a><a href="commission.html">Commission</a><a href="about.html">About</a><a href="contact.html">Contact</a><span id="acctslot" style="display:contents"></span></nav>
+</div></header>
+<main>
+<section class="wrap hero">
+  <h1>Original art on handmade paper</h1>
+  <p>Pen and ink, watercolour and organic pigments, made by hand in India. Every piece is one of a kind.</p>
+</section>
+<section class="wrap" id="shop" aria-labelledby="shoph">
+  <div class="shopbar"><h2 id="shoph">Shop originals<span class="count" id="count"></span></h2><div id="curslot"></div></div>
+  <div class="grid" id="grid"></div>
+</section>
+</main>
+<dialog id="lb" aria-label="Artwork view"><button class="closex" type="button" aria-label="Close">×</button><div class="viewer">
+  <div class="frame"><img alt="" draggable="false"><span class="wm">ir3d3um</span></div>
+  <p class="cap" id="lbcap"></p>
+  <div class="acts"><button type="button" class="btn ghost small" id="wallbtn">See it on a wall</button><button type="button" class="btn ghost small" id="roombtn">Try it in your room</button><a class="btn small" id="lbenq" href="contact.html">Enquire about this artwork</a></div>
+  <p class="fine">© ir3d3um. All artwork is copyrighted. Do not copy or reproduce without written permission.</p>
+</div></dialog>
+<dialog id="wall" aria-label="Artwork on a wall"><button class="closex" type="button" aria-label="Close">×</button><div class="viewer">
+  <canvas id="wallcanvas"></canvas><p class="cap" id="wallname"></p>
+  <div class="acts"><button type="button" class="btn ghost small" id="wnext">Change wall</button><button type="button" class="btn ghost small" id="fnext">Change frame</button></div>
+  <p class="fine">A visual preview only. Real size, framing and colour vary.</p>
+</div></dialog>
+<dialog id="room" aria-label="Try the artwork in your room"><button class="closex" type="button" aria-label="Close">×</button><div class="viewer">
+  <canvas id="roomcanvas"></canvas>
+  <div class="acts"><label class="btn small">Choose a photo of your wall<input type="file" id="roomfile" accept="image/*"></label><button type="button" class="btn ghost small" id="roomframe">Change frame</button></div>
+  <p class="fine"><label>Size <input type="range" id="roomsize" min="10" max="80" value="30"></label></p>
+  <p class="fine">Drag the artwork to place it. Your photo stays on your device and is never uploaded.</p>
+</div></dialog>
+<footer class="site-foot"><div class="wrap">
+  <nav aria-label="Footer"><a href="index.html">Shop</a><a href="commission.html">Commission</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="policies.html">Shipping, returns and policies</a><a href="https://www.instagram.com/ir3d3um" target="_blank" rel="noopener">Instagram</a></nav>
+  <span>© 2026 ir3d3um. All artwork is copyrighted and may not be reproduced without permission.</span>
+</div></footer>
+<script src="site-config.js"></script>
+<script src="common.js"></script>
+<script src="firebase-config.js"></script>
+<script src="accounts.js"></script>
+<script src="currency.js"></script>
+<script src="site.js"></script>
+</body>
+</html>
