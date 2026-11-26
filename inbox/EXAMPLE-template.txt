@@ -1,0 +1,9 @@
+Copy this file, rename it to match your photo (cactus.jpg -> cactus.txt), and fill it in.
+Only Title is needed. Leave any line out if you do not want it shown.
+
+Title: Cactus
+Size: 8 x 12 in
+Medium: Pen and ink on handmade paper
+Price: Rs 12,000
+Status: available
+Description: A short note about the piece. It can run over several lines.

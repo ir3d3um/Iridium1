@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>ir3d3um admin</title>
+<style>
+:root{--bg:#e5e7e1;--card:#dcdfd8;--ink:#1a1f2b;--soft:#4a5060;--seal:#a3322b;--line:#1a1f2b33;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#15181f;--card:#1c2029;--ink:#e6e4dc;--soft:#a5a9b4;--seal:#d4655c;--line:#e6e4dc33;color-scheme:dark}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:1rem}
+main{max-width:44rem;margin:0 auto}h1{font:500 2rem Georgia,serif;margin:.5rem 0 1rem}h2{font:500 1.3rem Georgia,serif;margin:0 0 .5rem}
+.box{background:var(--card);padding:1rem;margin:0 0 1rem;border:1px solid var(--line);border-radius:4px}
+label{display:block;font-size:.85rem;color:var(--soft);margin:.7rem 0 .2rem}
+input,select,textarea{font:inherit;width:100%;padding:.6rem;border:1px solid var(--line);border-radius:3px;background:var(--bg);color:var(--ink)}
+button{font:inherit;cursor:pointer;background:var(--ink);color:var(--bg);border:0;border-radius:3px;padding:.6rem 1rem;margin:.8rem .4rem 0 0}
+button.alt{background:transparent;color:var(--ink);border:1px solid var(--ink)}button.del{background:transparent;color:var(--seal);border:1px solid var(--seal)}
+.item{display:grid;gap:1rem}.item img{width:100%;max-height:220px;object-fit:contain;background:var(--bg)}
+@media(min-width:600px){.item{grid-template-columns:140px 1fr}}
+#msg{min-height:1.5rem;color:var(--soft)}.small{font-size:.85rem;color:var(--soft)}
+</style></head><body><main>
+<h1>ir3d3um admin</h1><p id="msg"></p>
+<section id="login" class="box"><h2>Sign in</h2>
+<p class="small">Uses a GitHub access token limited to this one repository. Nothing is sent anywhere except GitHub.</p>
+<form id="lf"><label>GitHub username</label><input id="lo" required autocapitalize="none">
+<label>Repository name</label><input id="lr" required autocapitalize="none">
+<label>Branch</label><input id="lbr" value="main" autocapitalize="none">
+<label>Access token</label><input id="lt" type="password" required autocomplete="off">
+<label><input id="rm" type="checkbox" style="width:auto"> Remember me on this device</label>
+<button>Sign in</button></form></section>
+<div id="app" hidden>
+<section class="box"><h2>Add artwork</h2>
+<form id="add"><label>Photo</label><input id="afile" type="file" accept="image/*" required>
+<label>Title</label><input id="at"><label>Size</label><input id="asz" placeholder="e.g. 8 × 12 in"><label>Medium</label><input id="amd" placeholder="e.g. Pen and ink on handmade paper">
+<label>Price</label><input id="apr" placeholder="e.g. ₹12,000 (blank = price on request)">
+<label>Status</label><select id="ast"><option value="available">Available</option><option value="sold">Sold</option></select>
+<label>Description</label><textarea id="acp" rows="2"></textarea><button>Upload and publish</button></form></section>
+<section class="box"><h2>Sale or event banner</h2><p class="small">Shown at the top of the site for everyone. Leave it blank to hide it.</p><textarea id="ann" rows="2" placeholder="e.g. Festive sale: 10% off originals until 30 Nov"></textarea><button id="annsave" type="button">Save banner</button></section>
+<section><h2>Your artworks</h2><p class="small">Change anything below, then press Save changes. The first artwork appears first on the site.</p>
+<div id="list"></div><button id="save">Save changes</button><button id="out" class="alt">Sign out</button></section></div>
+</main>
+<script>
+var $=function(s){return document.querySelector(s)},S={},items=[];
+function msg(t,bad){var m=$("#msg");m.textContent=t;m.style.color=bad?"var(--seal)":"var(--soft)"}
+function enc(s){return btoa(unescape(encodeURIComponent(s)))}
+function dec(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,""))))}
+function api(p,o){o=o||{};var get=!o.method;return fetch("https://api.github.com/repos/"+S.o+"/"+S.r+"/contents/"+p+(get?"?ref="+encodeURIComponent(S.b):""),{method:o.method||"GET",headers:{Authorization:"Bearer "+S.t,Accept:"application/vnd.github+json"},body:o.body}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.message||r.status);return j})})}
+function save(m){return api("artworks.json",{method:"PUT",body:JSON.stringify({message:m,content:enc(JSON.stringify(items,null,2)),sha:S.sha,branch:S.b})}).then(function(j){S.sha=j.content.sha;msg("Saved. The live site updates in a minute or two.")})}
+function load(){msg("Loading\u2026");return api("artworks.json").then(function(j){S.sha=j.sha;items=JSON.parse(dec(j.content));$("#login").hidden=true;$("#app").hidden=false;render();msg("");api("site.json").then(function(s){S.ann=s.sha;$("#ann").value=JSON.parse(dec(s.content)).announcement||""}).catch(function(){})})}
+function render(){var L=$("#list");L.innerHTML="";items.forEach(function(a,i){var d=document.createElement("div");d.className="box item";
+d.innerHTML='<img src="'+a.file+'" alt=""><div><label>Title</label><input data-k="title"><label>Size</label><input data-k="size"><label>Medium</label><input data-k="medium"><label>Price</label><input data-k="price" placeholder="blank = price on request"><label>Status</label><select data-k="status"><option value="available">Available</option><option value="sold">Sold</option></select><label>Description</label><textarea data-k="description" rows="2"></textarea><div><button type="button" class="alt" data-a="up">\u2191</button><button type="button" class="alt" data-a="down">\u2193</button><button type="button" class="del" data-a="del">Delete</button></div></div>';
+d.querySelectorAll("[data-k]").forEach(function(f){f.value=a[f.dataset.k]||"";f.oninput=function(){a[f.dataset.k]=f.value}});
+d.querySelectorAll("[data-a]").forEach(function(b){b.onclick=function(){act(i,b.dataset.a)}});L.appendChild(d)})}
+function act(i,k){
+if(k==="del"){if(!confirm("Delete this artwork from the site?"))return;var a=items.splice(i,1)[0];msg("Deleting\u2026");
+save("Remove artwork").then(function(){render();var fs=[a.file,a.thumb,a.view].filter(function(x,i,r){return x&&r.indexOf(x)===i});return Promise.all(fs.map(function(p){return api(p).then(function(f){return api(p,{method:"DELETE",body:JSON.stringify({message:"Remove image",sha:f.sha,branch:S.b})})}).catch(function(){})}))}).catch(function(x){msg("Error: "+x.message,1)});return}
+var j=k==="up"?i-1:i+1;if(j<0||j>=items.length)return;var t=items[i];items[i]=items[j];items[j]=t;render();msg("Order changed. Press Save changes.")}
+async function shrink(f,L,Q){L=L||1100;Q=Q||.74;var bm=await createImageBitmap(f),k=Math.min(1,L/Math.max(bm.width,bm.height)),c=document.createElement("canvas");c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext("2d").drawImage(bm,0,0,c.width,c.height);return{data:c.toDataURL("image/jpeg",Q).split(",")[1],w:c.width,h:c.height}}
+$("#add").onsubmit=async function(e){e.preventDefault();var f=$("#afile").files[0];if(!f)return;msg("Uploading\u2026");
+try{var s=await shrink(f,1100,.74),sm=await shrink(f,700,.72),id=Date.now(),name="images/art-"+id+".jpg",tn="images/art-"+id+"-thumb.jpg";
+await api(name,{method:"PUT",body:JSON.stringify({message:"Add image",content:s.data,branch:S.b})});
+await api(tn,{method:"PUT",body:JSON.stringify({message:"Add thumbnail",content:sm.data,branch:S.b})});
+var t=$("#at").value;items.unshift({file:name,thumb:tn,view:name,w:sm.w,h:sm.h,title:t,alt:t?"Artwork: "+t:"Artwork by ir3d3um",size:$("#asz").value,medium:$("#amd").value,price:$("#apr").value,status:$("#ast").value,description:$("#acp").value});
+await save("Add artwork");e.target.reset();render()}catch(x){msg("Error: "+x.message,1)}};
+$("#save").onclick=function(){msg("Saving\u2026");save("Update gallery").catch(function(x){msg("Error: "+x.message,1)})};
+$("#annsave").onclick=function(){msg("Saving banner\u2026");api("site.json",{method:"PUT",body:JSON.stringify({message:"Update banner",content:enc(JSON.stringify({announcement:$("#ann").value.trim()},null,2)),sha:S.ann,branch:S.b})}).then(function(j){S.ann=j.content.sha;msg("Banner saved. It shows on the site within a minute or two.")}).catch(function(x){msg("Error: "+x.message,1)})};
+$("#out").onclick=function(){localStorage.removeItem("irAdmin");location.reload()};
+$("#lf").onsubmit=function(e){e.preventDefault();S={o:$("#lo").value.trim(),r:$("#lr").value.trim(),b:$("#lbr").value.trim()||"main",t:$("#lt").value.trim()};
+load().then(function(){if($("#rm").checked)localStorage.setItem("irAdmin",JSON.stringify(S))}).catch(function(x){msg("Could not sign in: "+x.message,1)})};
+try{var sv=JSON.parse(localStorage.getItem("irAdmin"));if(sv){S=sv;load().catch(function(){msg("Please sign in again.",1)})}}catch(e){}
+</script></body></html>
